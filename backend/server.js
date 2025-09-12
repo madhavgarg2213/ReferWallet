@@ -23,17 +23,18 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/shop-mana
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-// Routes
+// --- ROUTES ---
+// All routes must be defined here, together.
 app.use('/api/customers', require('./routes/customers'));
 app.use('/api/purchases', require('./routes/purchases'));
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes); // MOVED TO HERE - THIS IS THE FIX
 
 // Basic route
 app.get('/', (req, res) => {
   res.json({ message: 'Shop Management API is running!' });
 });
 
-// Error handling middleware
+// Error handling middleware (This should come AFTER all the valid routes)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
