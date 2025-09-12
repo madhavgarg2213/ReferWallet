@@ -4,6 +4,8 @@ const cors = require('cors');
 const authRoutes = require("./routes/auth");
 require('dotenv').config();
 
+console.log("--- SERVER.JS V2 --- THIS IS THE LATEST CODE ---");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -14,6 +16,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.path}`);
+  next();
+});
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/shop-management', {
