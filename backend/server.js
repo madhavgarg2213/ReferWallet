@@ -26,6 +26,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/shop-mana
 // Routes
 app.use('/api/customers', require('./routes/customers'));
 app.use('/api/purchases', require('./routes/purchases'));
+app.use("/api/auth", authRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
@@ -37,8 +38,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
-
-app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
