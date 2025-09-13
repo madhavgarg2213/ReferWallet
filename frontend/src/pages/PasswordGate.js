@@ -10,7 +10,7 @@ export default function PasswordGate({ onUnlock }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/check", { password: input });
+      const res = await axios.post("/auth/check", { password: input });
       if (res.data.success) {
         localStorage.setItem("siteAccess", "true");
         onUnlock();
