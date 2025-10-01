@@ -70,7 +70,6 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // Only run if there are search results and customerId is not populated
     const fetchMissingCustomers = async () => {
       const needsFetch = searchResults.some(
         (p) => typeof p.customerId === 'string'
@@ -106,32 +105,39 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 sm:px-4">
+      {/* Header + Search */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-2 text-gray-600">Overview of your Sona Saree's Recent Purchase</p>
+        <div className="text-center md:text-left">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="mt-2 text-gray-600 text-sm sm:text-base">
+            Overview of your Sona Saree's Recent Purchase
+          </p>
         </div>
-        <form onSubmit={handleSearch} className="mt-4 md:mt-0 flex items-center space-x-2">
+        <form 
+          onSubmit={handleSearch} 
+          className="mt-4 md:mt-0 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto"
+        >
           <input
             type="text"
             placeholder="Search by ReferID"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full sm:w-auto border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+            className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             Search
           </button>
         </form>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
         <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
+          <div className="p-4 sm:p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
@@ -140,10 +146,10 @@ const Dashboard = () => {
                   </svg>
                 </div>
               </div>
-              <div className="ml-5 w-0 flex-1">
+              <div className="ml-4 sm:ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Customers</dt>
-                  <dd className="text-lg font-medium text-gray-900">{stats.totalCustomers}</dd>
+                  <dt className="text-xs sm:text-sm font-medium text-gray-500 truncate">Total Customers</dt>
+                  <dd className="text-base sm:text-lg font-medium text-gray-900">{stats.totalCustomers}</dd>
                 </dl>
               </div>
             </div>
@@ -151,42 +157,45 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Recent Purchases */}
       <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Purchases</h3>
-          <div className="mt-5">
+        <div className="px-3 sm:px-4 py-4 sm:py-5">
+          <h3 className="text-base sm:text-lg leading-6 font-medium text-gray-900">Recent Purchases</h3>
+          <div className="mt-4 sm:mt-5">
             {stats.recentPurchases.length === 0 ? (
-              <p className="text-gray-500">No recent purchases</p>
+              <p className="text-gray-500 text-sm sm:text-base">No recent purchases</p>
             ) : (
               <div className="flow-root">
-                <ul className="-my-5 divide-y divide-gray-200">
+                <ul className="-my-4 sm:-my-5 divide-y divide-gray-200">
                   {stats.recentPurchases.map((purchase) => (
-                    <li key={purchase._id} className="py-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                            <span className="text-green-600 font-medium text-sm">
-                              {purchase.customerId?.name?.charAt(0) || '?'}
-                            </span>
+                    <li key={purchase._id} className="py-3 sm:py-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="flex-shrink-0">
+                            <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                              <span className="text-green-600 font-medium text-sm">
+                                {purchase.customerId?.name?.charAt(0) || '?'}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {purchase.customerId?.name || 'Unknown Customer'}
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-500">
+                              ReferID: {purchase.referId}
+                            </p>
                           </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {purchase.customerId?.name || 'Unknown Customer'}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            ReferID: {purchase.referId}
-                          </p>
-                        </div>
-                        <div className="flex-shrink-0 text-right">
+                        <div className="text-left sm:text-right">
                           <p className="text-sm font-medium text-gray-900">
                             ₹{purchase.amount}
                           </p>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-xs sm:text-sm text-gray-500">
                             +₹{purchase.walletCredit} wallet credit
                           </p>
                           {purchase.walletUsed > 0 && (
-                            <p className="text-sm text-red-500">
+                            <p className="text-xs sm:text-sm text-red-500">
                               -₹{purchase.walletUsed} used from wallet
                             </p>
                           )}
@@ -201,41 +210,44 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Search Results */}
       {searchResults.length > 0 && (
         <div className="bg-white shadow rounded-lg mt-6">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+          <div className="px-3 sm:px-4 py-4 sm:py-5">
+            <h3 className="text-base sm:text-lg leading-6 font-medium text-gray-900">
               Search Results
             </h3>
-            <div className="mt-5">
-              <ul className="-my-5 divide-y divide-gray-200">
+            <div className="mt-4 sm:mt-5">
+              <ul className="-my-4 sm:-my-5 divide-y divide-gray-200">
                 {searchResults.map((purchase) => (
-                  <li key={purchase._id} className="py-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-shrink-0">
-                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                          <span className="text-blue-600 font-medium text-sm">
-                            {purchase.customerId?.name?.charAt(0) || '?'}
-                          </span>
+                  <li key={purchase._id} className="py-3 sm:py-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                            <span className="text-blue-600 font-medium text-sm">
+                              {purchase.customerId?.name?.charAt(0) || '?'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {purchase.customerId?.name || 'Unknown Customer'}
+                          </p>
+                          <p className="text-xs sm:text-sm text-gray-500">
+                            ReferID: {purchase.referId}
+                          </p>
                         </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {purchase.customerId?.name || 'Unknown Customer'}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          ReferID: {purchase.referId}
-                        </p>
-                      </div>
-                      <div className="flex-shrink-0 text-right">
+                      <div className="text-left sm:text-right">
                         <p className="text-sm font-medium text-gray-900">
                           ₹{purchase.amount}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs sm:text-sm text-gray-500">
                           +₹{purchase.walletCredit} wallet credit
                         </p>
                         {purchase.walletUsed > 0 && (
-                          <p className="text-sm text-red-500">
+                          <p className="text-xs sm:text-sm text-red-500">
                             -₹{purchase.walletUsed} used from wallet
                           </p>
                         )}
@@ -249,9 +261,9 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Added section for the name */}
+      {/* Footer */}
       <div className="text-center mt-8 pb-4">
-        <p className="text-sm text-gray-500">Made by - Madhav Garg</p>
+        <p className="text-xs sm:text-sm text-gray-500">Made by - Madhav Garg</p>
       </div>
     </div>
   );
